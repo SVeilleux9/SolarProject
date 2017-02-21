@@ -1,20 +1,21 @@
 % Percentage of sunny days in your area between 0-100. Check out
 % https://www1.ncdc.noaa.gov/pub/data/ccd-data/pctposrank.txt
-sunnyDaysPercentage = 57;
+sunnyDaysPercentage = .48;
+CloudyDayRadiationPercentage = .15;
 
 % This is peak sun hours Jan-Dec. Check out 
 % http://rredc.nrel.gov/solar/old_data/nsrdb/1961-1990/redbook/sum2/state.html
-PSH = [3.6, 4.5, 5.0, 5.1, 5.3, 5.5, 5.6, 5.5, 5.1, 4.3, 3.1, 3.0];
+PVWattsPowerPerMonth = [46 63 100 116 141 140 143 126 92 72 41 37];
 
 % This is kWH per month, Jan-Dec. Enter in what you use at your house.
 powerUsage = [434 604 406 523 292 246 276 351 403 485 450 443];
 
 % Battery size (kWH) and price per kWH
-batterySize = 100;
+batterySize = 28;
 batteryPrice = 450;
 
 % Solar panel array size (kW)
-solarSize = 12;
+solarSize = 6.12;
 solarPrice = 2500;
 
 % For optimal setup calculation what is the min run time percentage you
@@ -26,7 +27,10 @@ minRunPercentage = .95;
 % Start some code, You dont need to concern yourself with anything past
 % this
 
-solFun = @(bat,sol) solarEst(sunnyDaysPercentage, PSH, powerUsage, bat, sol);
+powerPerDay = solPerDay(sunnyDaysPercentage, PVWattsPowerPerMonth, ...
+    CloudyDayRadiationPercentage);
+
+solFun = @(bat,sol) solarEst(sunnyDaysPercentage, powerPerDay, powerUsage, bat, sol);
 
 runPercentage = solFun(batterySize, solarSize)*100;
 
